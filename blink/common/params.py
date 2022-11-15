@@ -233,6 +233,12 @@ class BlinkParser(argparse.ArgumentParser):
             "--shuffle", type=bool, default=False, 
             help="Whether to shuffle train data",
         )
+        parser.add_argument(
+            "--entity_dict_path",
+            default=None,
+            type=str,
+            help="Path for entity dictionary",
+        )
 
     def add_eval_args(self, args=None):
         """

@@ -229,16 +229,18 @@ def main(params):
     if reranker.n_gpu > 0:
         torch.cuda.manual_seed_all(seed)
 
+    entity_dict = utils.read_entity_dict(params["entity_dict_path"])
+
     # Load train data
-    train_samples = utils.read_dataset("train", params["data_path"])
+    train_samples = utils.read_dataset("train", params["data_path"], entity_dict=entity_dict)
     logger.info("Read %d train samples." % len(train_samples))
     logger.info("Finished reading all train samples")
 
     # Load eval data
     try:
-        valid_samples = utils.read_dataset("valid", params["data_path"])
+        valid_samples = utils.read_dataset("valid", params["data_path"], entity_dict=entity_dict)
     except FileNotFoundError:
-        valid_samples = utils.read_dataset("dev", params["data_path"])
+        valid_samples = utils.read_dataset("dev", params["data_path"], entity_dict=entity_dict)
     # MUST BE DIVISBLE BY n_gpus
     if len(valid_samples) > 1024:
         valid_subset = 1024

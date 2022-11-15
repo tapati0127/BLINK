@@ -20,7 +20,15 @@ from tqdm import tqdm
 from elq.biencoder.biencoder import BiEncoderRanker
 
 
-def read_dataset(dataset_name, preprocessed_json_data_parent_folder, debug=False):
+def read_entity_dict(filepath):
+    with open(filepath, 'r') as f:
+        data = json.load(f)
+    return data
+
+
+def read_dataset(dataset_name, preprocessed_json_data_parent_folder, debug=False, entity_dict=None):
+    if entity_dict is None:
+        raise TypeError
     file_name = "{}.jsonl".format(dataset_name)
     txt_file_path = os.path.join(preprocessed_json_data_parent_folder, file_name)
 
@@ -28,7 +36,12 @@ def read_dataset(dataset_name, preprocessed_json_data_parent_folder, debug=False
 
     with io.open(txt_file_path, mode="r", encoding="utf-8") as file:
         for line in file:
-            samples.append(json.loads(line.strip()))
+            item = json.loads(line.strip())
+            label = entity_dict.get(item['label_title'], None)
+            if label is None:
+                continue
+            item['label'] = label
+            samples.append(item)
             if debug and len(samples) > 200:
                 break
 

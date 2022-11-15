@@ -144,8 +144,9 @@ def main(params):
     if reranker.n_gpu > 0:
         torch.cuda.manual_seed_all(seed)
 
+    entity_dict = utils.read_entity_dict(params["entity_dict_path"])
     # Load train data
-    train_samples = utils.read_dataset("train", params["data_path"])
+    train_samples = utils.read_dataset("train", params["data_path"], entity_dict=entity_dict)
     logger.info("Read %d train samples." % len(train_samples))
 
     train_data, train_tensor_data = data.process_mention_data(
@@ -169,7 +170,7 @@ def main(params):
 
     # Load eval data
     # TODO: reduce duplicated code here
-    valid_samples = utils.read_dataset("valid", params["data_path"])
+    valid_samples = utils.read_dataset("valid", params["data_path"], entity_dict=entity_dict)
     logger.info("Read %d valid samples." % len(valid_samples))
 
     valid_data, valid_tensor_data = data.process_mention_data(

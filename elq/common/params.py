@@ -341,6 +341,12 @@ class ElqParser(argparse.ArgumentParser):
             action="store_true",
             help="Get losses during evaluation",
         )
+        parser.add_argument(
+            "--entity_dict_path",
+            default=None,
+            type=str,
+            help="Path for entity dictionary",
+        )
 
     def add_eval_args(self, args=None):
         """
@@ -376,3 +382,4 @@ class ElqParser(argparse.ArgumentParser):
             type=str,
             help="Path for candidate encoding",
         )
+
