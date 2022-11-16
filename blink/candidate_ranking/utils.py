@@ -22,9 +22,14 @@ from blink.biencoder.biencoder import BiEncoderRanker
 
 
 def read_entity_dict(filepath):
-    with open(filepath, 'r') as f:
-        data = json.load(f)
-    return data
+    entity_dict = {}
+    with io.open(filepath, mode="r") as file:
+        for line in file:
+            item = json.loads(line.strip())
+            entity_dict.update({
+                item['title']: item,
+                                })
+    return entity_dict
 
 
 def read_dataset(dataset_name, preprocessed_json_data_parent_folder, debug=False, entity_dict=None):
@@ -41,7 +46,8 @@ def read_dataset(dataset_name, preprocessed_json_data_parent_folder, debug=False
             label = entity_dict.get(item['label_title'], None)
             if label is None:
                 continue
-            item['label'] = label
+            item['label'] = label['text']
+            item['label_id'] = label['doc_id']
             samples.append(item)
             if debug and len(samples) > 200:
                 break
